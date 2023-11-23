@@ -1,0 +1,29 @@
+---
+version: '3.8'
+services:
+  ibackup:
+    image: baltay/iphone-backup:1.0
+    container_name: ibackup
+    # privileged: true
+    network_mode: 'host'
+    # entrypoint: 'tail -f /dev/null'
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Amsterdam
+    volumes:
+      - /selfhosted/ibackup/data/:/ibackup/
+      - /selfhosted/ibackup/lockdown/:/var/lib/lockdown/
+      # - /var/run:/var/run
+      - /dev/bus/usb:/dev/bus/usb
+      - /home/baltay/projects/iphone-backup/docker/ibackup-node/:/ibackup-node/
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+
+networks:
+  default:
+    external: true
+    name: none
