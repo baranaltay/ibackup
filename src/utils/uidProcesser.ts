@@ -1,6 +1,5 @@
 import * as fs from 'node:fs';
 import { PIDS_FOLDER, BACKUP_FLAG_PATH, BACKUP_FOLDER, LOGS_FOLDER } from "../config";
-import { spwn } from "./spwn";
 
 export function getPidFileNameFor(cmdName: string): string {
     return `${PIDS_FOLDER}/${cmdName}.pid`;

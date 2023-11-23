@@ -1,4 +1,3 @@
 export function generateCommandName(name: string, args: string[]) {
-    let cmdName = name + '_' + args.map(x => x.toString().replaceAll(' ', '_').replaceAll(',', '_') + '_');
-    return cmdName;
+    return name + '_' + args.map(x => x.replaceAll(' ', '_').replaceAll('/', '#') + '_').join('_').slice(0, -1);
 }

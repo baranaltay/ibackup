@@ -42,15 +42,19 @@ if (!fs.existsSync(BACKUP_FLAG_PATH)) {
     fs.mkdirSync(BACKUP_FLAG_PATH, { recursive: true });
 }
 
+function removeFromInProgress(uid: string): void {
+    let index = inProgressUids.indexOf(uid);
+    inProgressUids.splice(index, 1);
+}
 
 async function backupDevice(uid: string): Promise<void> {
     // TODO: implement battery health > 50
     let name = await getDeviceNameFor(uid);
-
     let batteryLevel = await tryGetBatteryLevel(uid);
 
-    if (batteryLevel == -1) {
+    if (batteryLevel == -1 || isNaN(batteryLevel)) {
         console.log('could not read battery level. Aborting backup for: ' + name);
+        removeFromInProgress(uid);
         return;
     }
 
@@ -76,8 +80,7 @@ async function backupDevice(uid: string): Promise<void> {
     } else {
         notify_and_log(`backup failed for ${name}! (Battery level: ${batteryLevel}) \n${stderr}`);
     }
-    let index = inProgressUids.indexOf(uid);
-    inProgressUids.splice(index, 1);
+    removeFromInProgress(uid);
 }
 
 function startBackupForUids(uids: string[]) {
@@ -88,9 +91,6 @@ function startBackupForUids(uids: string[]) {
 
 async function tryGetAllUids(): Promise<string[]> {
     let tryCounter = 0;
-
-    toBeBackedUpUids = await getAllPairedUids();
-
     while (!killFlag && tryCounter++ < TRY_GET_DEVICE_COUNT) {
         let uids = await getAllUids();
         if (uids.length > 0) {

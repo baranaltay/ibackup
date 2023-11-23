@@ -16,7 +16,7 @@ services:
       - /selfhosted/ibackup/lockdown/:/var/lib/lockdown/
       # - /var/run:/var/run
       - /dev/bus/usb:/dev/bus/usb
-      - /home/baltay/projects/iphone-backup/docker/ibackup-node/:/ibackup-node/
+      - /home/baltay/projects/iphone-backup/ibackup/:/ibackup-node/
     # restart: unless-stopped
     deploy:
       resources:

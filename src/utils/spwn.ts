@@ -7,7 +7,6 @@ import { generateCommandName } from './generateCommandName';
 
 export async function spwn(name: string, args: string[], logToFile: boolean = false, isUsbmuxd: boolean = false): Promise<SpawnResult> {
     let cmdName = generateCommandName(name, args);
-    cmdName = cmdName.slice(0, -1);
     if (cmdName in child_processes) {
         killProcess(cmdName);
     }

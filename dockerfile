@@ -62,15 +62,12 @@ cd /usr/src/usbmuxd && \
 # RUN git clone https://github.com/libimobiledevice/libideviceactivation.git /usr/src/libideviceactivation && \
 # cd /usr/src/libideviceactivation && \
 # ./autogen.sh && make && make install
-
-
-COPY . .
 WORKDIR /ibackup-node
-RUN npm install
-# RUN chmod +x *.sh
+COPY . .
+RUN npm ci
+
 RUN wget -q https://github.com/jkcoxson/netmuxd/releases/download/v0.1.4/aarch64-linux-netmuxd
-RUN chmod a+rwx /aarch64-linux-netmuxd
-RUN mv /aarch64-linux-netmuxd /usr/bin
-# ENV USBMUXD_SOCKET_ADDRESS=127.0.0.1:27015
+RUN chmod a+rwx aarch64-linux-netmuxd
+RUN mv aarch64-linux-netmuxd /usr/bin
 
 CMD "npm" "start"

@@ -8,10 +8,11 @@ function getIsCharging(arr: string[]): boolean {
 }
 
 function getCurrentCapacity(arr: string[]): number {
-    let index = arr.findIndex(x => x.includes('CurrentCapacity'));
+    let index = arr.findIndex(x => x.trim() == '<key>CurrentCapacity</key>');
     let xml = arr[index + 1];
-    let capacityStr = xml.substring('<integer>'.length, xml.length);
-    capacityStr = capacityStr.slice('</integer>'.length * -1);
+
+    let capacityStr = xml.trim().slice('<integer>'.length).slice(0, '</integer>'.length * -1);
+    console.log('capacityStr', capacityStr);
     return parseInt(capacityStr);
 }
 
@@ -19,6 +20,7 @@ function getCurrentCapacity(arr: string[]): number {
 export async function getBatteryLevelFor(uid: string): Promise<number> {
     let result = await spwn('idevicediagnostics', ['-n', 'ioregentry', 'AppleSmartBattery', '-u', uid.toString()]);
     if (result.code !== 0) {
+        console.log('idevicediagnostics: ', result.stderr);
         return -1;
     }
 
@@ -28,13 +30,6 @@ export async function getBatteryLevelFor(uid: string): Promise<number> {
     console.log(`current battery level is ${batteryLevel}. Device ${IsCharging ? 'is' : 'is not'} charging`)
 
     return getCurrentCapacity(arr);
-    // const { XDocument } = await import('@openxmldev/linq-to-xml');
-    // const doc = XDocument.parse(result.stdout);
-    // var batteryLevel = doc
-    //     .descendants()
-    //     .singleOrDefault(x => x.value == 'CurrentBattery' && x.name.localName.toLowerCase() == 'key')
-    //     ?.nextNode;
-    // console.log(batteryLevel);
 }
 
 export async function tryGetBatteryLevel(uid: string): Promise<number> {
