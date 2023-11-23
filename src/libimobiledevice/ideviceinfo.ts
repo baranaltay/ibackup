@@ -1,4 +1,4 @@
-import { uidToNameDictionary } from "../global";
+// import { uidToNameDictionary } from "../global";
 import { spwn } from "../utils/spwn";
 import { createKnownUidFor } from "../utils/uidProcesser";
 
@@ -8,7 +8,7 @@ export async function getDeviceNameFor(uid: string): Promise<string> {
         console.error('error getting device name for uid:', uid, 'error: ', result.stderr);
     }
 
-    if (!(uid in uidToNameDictionary) || uidToNameDictionary[uid] == uid) {
+    if (!(uid in globalThis.uidToNameDictionary) || globalThis.uidToNameDictionary[uid] == uid) {
         createKnownUidFor(uid, result.stdout);
     }
 
