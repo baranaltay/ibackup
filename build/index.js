@@ -46,8 +46,10 @@ const recursiveAll_1 = require("./utils/recursiveAll");
 const types_1 = require("./types");
 const idevicediagnostics_1 = require("./libimobiledevice/idevicediagnostics");
 const idevicebackup2_1 = require("./libimobiledevice/idevicebackup2");
+const global_1 = require("./global");
 let killFlag = false;
 var toBeBackedUpUids = [];
+var connectedUids = [];
 const inProgressUids = [];
 const promises = [];
 const sigterm = () => {
@@ -57,24 +59,52 @@ const sigterm = () => {
 };
 process.on('SIGTERM', sigterm);
 process.on('SIGINT', sigterm);
-fs.rmSync(config_1.PIDS_FOLDER, { recursive: true, force: true });
-fs.mkdirSync(config_1.PIDS_FOLDER, { recursive: true });
-fs.rmSync(config_1.LOGS_FOLDER, { recursive: true, force: true });
-fs.mkdirSync(config_1.LOGS_FOLDER, { recursive: true });
-if (!fs.existsSync(config_1.BACKUP_FOLDER)) {
-    fs.mkdirSync(config_1.BACKUP_FOLDER, { recursive: true });
-}
-if (!fs.existsSync(config_1.BACKUP_FLAG_PATH)) {
-    fs.mkdirSync(config_1.BACKUP_FLAG_PATH, { recursive: true });
+function ensureDirectories() {
+    fs.rmSync(config_1.PIDS_FOLDER, { recursive: true, force: true });
+    fs.mkdirSync(config_1.PIDS_FOLDER, { recursive: true });
+    fs.rmSync(config_1.LOGS_FOLDER, { recursive: true, force: true });
+    fs.mkdirSync(config_1.LOGS_FOLDER, { recursive: true });
+    if (!fs.existsSync(config_1.BACKUP_FOLDER)) {
+        fs.mkdirSync(config_1.BACKUP_FOLDER, { recursive: true });
+    }
+    if (!fs.existsSync(config_1.BACKUP_FLAG_FOLDER)) {
+        fs.mkdirSync(config_1.BACKUP_FLAG_FOLDER, { recursive: true });
+    }
+    if (!fs.existsSync(config_1.KNOWN_UIDS_FOLDER)) {
+        fs.mkdirSync(config_1.KNOWN_UIDS_FOLDER, { recursive: true });
+    }
 }
 function removeFromInProgress(uid) {
     let index = inProgressUids.indexOf(uid);
     inProgressUids.splice(index, 1);
 }
+function populateUidsDictionary(uids) {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (let i = 0; i < uids.length; i++) {
+            const uid = uids[i];
+            yield populateUidDictionary(uid);
+        }
+    });
+}
+function populateUidDictionary(uid) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (uid in global_1.uidToNameDictionary) {
+            return;
+        }
+        let file = (0, uidProcesser_1.getKnownUidPathFor)(uid);
+        let name = uid;
+        if (fs.existsSync(file)) {
+            name = `"${fs.readFileSync(file, 'utf-8')}"`;
+        }
+        else {
+            name = `"${yield (0, libimobiledevice_1.getDeviceNameFor)(uid)}"`;
+        }
+        global_1.uidToNameDictionary[uid] = name;
+    });
+}
 function backupDevice(uid) {
     return __awaiter(this, void 0, void 0, function* () {
-        // TODO: implement battery health > 50
-        let name = yield (0, libimobiledevice_1.getDeviceNameFor)(uid);
+        let name = global_1.uidToNameDictionary[uid];
         let batteryLevel = yield (0, idevicediagnostics_1.tryGetBatteryLevel)(uid);
         if (batteryLevel == -1 || isNaN(batteryLevel)) {
             console.log('could not read battery level. Aborting backup for: ' + name);
@@ -88,7 +118,7 @@ function backupDevice(uid) {
         }
         (0, notification_1.notify_and_log)(`starting backup for ${name}! (Battery level: ${batteryLevel})`);
         if (!(0, uidProcesser_1.isBackupExistsFor)(uid)) {
-            console.log(`no previous backup for uid: ${uid}. Proceeding with full backup`);
+            console.log(`no previous backup for: ${name}. Proceeding with full backup`);
             let backupFolder = (0, uidProcesser_1.getBackupFolderFor)(uid);
             fs.mkdirSync(backupFolder, { recursive: true });
         }
@@ -109,14 +139,19 @@ function startBackupForUids(uids) {
         promises.push(backupDevice(uids[i]));
     }
 }
+function printStatus() {
+    let backedupUids = (0, uidProcesser_1.getBackupedUpDeviceUids)();
+    let status = `Paired devices: ${toBeBackedUpUids.map(x => global_1.uidToNameDictionary[x])}\nConnected devices: ${connectedUids.map(x => global_1.uidToNameDictionary[x])}\nBackedup devices: ${backedupUids.map(x => global_1.uidToNameDictionary[x])}`;
+    console.log(status);
+}
 function tryGetAllUids() {
     return __awaiter(this, void 0, void 0, function* () {
         let tryCounter = 0;
-        toBeBackedUpUids = yield (0, libimobiledevice_1.getAllPairedUids)();
         while (!killFlag && tryCounter++ < config_1.TRY_GET_DEVICE_COUNT) {
             let uids = yield (0, libimobiledevice_1.getAllUids)();
             if (uids.length > 0) {
-                console.log('device(s) found!: ', uids);
+                yield populateUidsDictionary(uids);
+                console.log('device(s) found!: ', uids.map(x => global_1.uidToNameDictionary[x]));
                 return uids;
             }
             console.log(`No device is present. Sleeping for ${config_1.SLEEP_SECONDS}... (try count is ${tryCounter})`);
@@ -129,14 +164,14 @@ function removeFromArrayIfBackupPresent(uids) {
     for (let i = uids.length - 1; i >= 0; i--) {
         const uid = uids[i];
         if ((0, uidProcesser_1.isBackupFlagPresentFor)(uid)) {
-            console.log('backup present today for uid: ' + uid);
+            console.log('backup present today for ' + global_1.uidToNameDictionary[uid]);
             uids.splice(i, 1);
         }
     }
 }
 function getUids() {
     return __awaiter(this, void 0, void 0, function* () {
-        const connectedUids = yield tryGetAllUids();
+        connectedUids = yield tryGetAllUids();
         if (connectedUids.length === 0) {
             console.log('no connected device found. sleeping for 10s...');
             yield (0, sleep_1.sleep)(10);
@@ -156,7 +191,6 @@ function getUids() {
             (0, notification_1.notify_and_log)('we already backed up for today, sleeping until tomorrow');
             return types_1.ReturnLoop.break;
         }
-        console.log('starting backup procedure for uids: ', connectedUids);
         toBeBackedUpUids = (0, distinct_1.distinct)(toBeBackedUpUids, connectedUids);
         for (let i = 0; i < connectedUids.length; i++) {
             const uid = connectedUids[i];
@@ -167,8 +201,10 @@ function getUids() {
         return connectedUids;
     });
 }
+setInterval(printStatus, 10000);
 (function main() {
     return __awaiter(this, void 0, void 0, function* () {
+        ensureDirectories();
         dailyLoop: do {
             yield (0, daemons_1.activateMuxdDaemons)();
             toBeBackedUpUids = yield (0, libimobiledevice_1.getAllPairedUids)();
@@ -185,16 +221,16 @@ function getUids() {
                         yield (0, sleep_1.sleep)(10);
                         continue backupLoop;
                     }
-                    (0, uidProcesser_1.deleteBackupFlagsForUids)(uids);
-                    startBackupForUids(uids);
+                    (0, uidProcesser_1.deleteBackupFlagsForUids)(connectedUids);
+                    startBackupForUids(connectedUids);
                     yield (0, sleep_1.sleep)(10);
                 }
             }
             else {
-                (0, notification_1.notify_and_log)('we already backed up for today, sleeping until tomorrow');
+                (0, notification_1.notify_and_log)('we already backed up today, sleeping until tomorrow');
             }
             if (toBeBackedUpUids.length > 0) {
-                (0, notification_1.notify_and_log)('we could not backed up these uids for today, sleeping until tomorrow: ', toBeBackedUpUids);
+                (0, notification_1.notify_and_log)('we could not back these up today, sleeping until tomorrow: ', toBeBackedUpUids.map(x => global_1.uidToNameDictionary[x]));
             }
             yield (0, recursiveAll_1.PromiseAllDynamic)(promises);
             yield (0, daemons_1.deactivateMuxdDaemons)();

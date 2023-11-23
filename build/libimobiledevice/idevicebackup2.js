@@ -37,11 +37,12 @@ const fs = __importStar(require("node:fs"));
 const config_1 = require("../config");
 const spwn_1 = require("../utils/spwn");
 const uidProcesser_1 = require("../utils/uidProcesser");
+const global_1 = require("../global");
 function startBackupFor(uid) {
     return __awaiter(this, void 0, void 0, function* () {
         const ideviceBackup2Args = ['-u', uid.toString(), '-n', 'backup', '--full', config_1.BACKUP_FOLDER];
         if (!(0, uidProcesser_1.isBackupExistsFor)(uid)) {
-            console.log(`no previous backup for uid: ${uid}. Proceeding with full backup`);
+            console.log(`no previous backup for ${global_1.uidToNameDictionary[uid]}. Proceeding with full backup`);
             let backupFolder = (0, uidProcesser_1.getBackupFolderFor)(uid);
             fs.mkdirSync(backupFolder, { recursive: true });
         }

@@ -1,12 +1,23 @@
 import * as fs from 'node:fs';
-import { PIDS_FOLDER, BACKUP_FLAG_PATH, BACKUP_FOLDER, LOGS_FOLDER } from "../config";
+import {
+    PIDS_FOLDER,
+    BACKUP_FLAG_FOLDER,
+    BACKUP_FOLDER,
+    LOGS_FOLDER,
+    KNOWN_UIDS_FOLDER
+} from "../config";
+import { uidToNameDictionary } from '../global';
 
 export function getPidFileNameFor(cmdName: string): string {
     return `${PIDS_FOLDER}/${cmdName}.pid`;
 }
 
 export function getBackupFlagPathFor(uid: string): string {
-    return `${BACKUP_FLAG_PATH}/${uid}`;
+    return `${BACKUP_FLAG_FOLDER}/${uid}`;
+}
+
+export function getKnownUidPathFor(uid: string): string {
+    return `${KNOWN_UIDS_FOLDER}/${uid}`;
 }
 
 export function getBackupFolderFor(uid: string): string {
@@ -41,14 +52,27 @@ export function createBackupFlagFor(uid: string) {
     fs.writeFileSync(path, Date.now().toString());
 }
 
-
 export function deleteBackupFlagsForUids(uids: string[]) {
     for (let i = 0; i < uids.length; i++) {
         const uid = uids[i];
         const backupFlag = getBackupFlagPathFor(uid);
         if (fs.existsSync(backupFlag)) {
-            console.log(`backup flag found for ${uid}, removing...`);
+            console.log(`backup flag found for ${uidToNameDictionary[uid]}, removing...`);
             fs.unlinkSync(backupFlag);
         }
     }
+}
+
+export function createKnownUidFor(uid: string, name: string) {
+    const path = getKnownUidPathFor(uid);
+    console.log(`updating known name for ${uid} to ${name}`);
+
+    if (!fs.existsSync(path)) {
+        fs.closeSync(fs.openSync(path, 'w'));
+        fs.writeFileSync(path, name);
+    }
+}
+
+export function getBackupedUpDeviceUids(): string[] {
+    return fs.readdirSync(BACKUP_FLAG_FOLDER);
 }

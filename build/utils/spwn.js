@@ -52,10 +52,9 @@ function spwn(name, args, logToFile = false, isUsbmuxd = false) {
             }
             const cmd = (0, child_process_1.spawn)(name, args, { env: environment });
             process_1.child_processes[cmdName] = cmd;
-            console.log('spawning ', name, args, 'with pid: ', cmd.pid);
+            // console.log('spawning ', name);
             let pidFileName = (0, uidProcesser_1.getPidFileNameFor)(cmdName);
             fs.writeFileSync(pidFileName, ((_a = cmd.pid) === null || _a === void 0 ? void 0 : _a.toString()) || 'no-pid');
-            // console.log('creating pid file ', pidFileName);
             const result = {
                 stdout: '',
                 stderr: '',
@@ -79,8 +78,7 @@ function spwn(name, args, logToFile = false, isUsbmuxd = false) {
                 });
             }
             cmd.on('exit', (code) => {
-                console.log(`${cmdName} exited with code: ${code}`);
-                // console.log('cleaning up pid files...');
+                // console.log(`${cmdName} exited with code: ${code}`);
                 let pidFileName = (0, uidProcesser_1.getPidFileNameFor)(cmdName);
                 if (fs.existsSync(pidFileName)) {
                     fs.unlinkSync(pidFileName);

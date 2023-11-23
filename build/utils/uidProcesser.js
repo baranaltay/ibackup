@@ -23,17 +23,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteBackupFlagsForUids = exports.createBackupFlagFor = exports.isBackupFlagPresentFor = exports.isBackupExistsFor = exports.getLogFileFor = exports.getBackupFolderFor = exports.getBackupFlagPathFor = exports.getPidFileNameFor = void 0;
+exports.getBackupedUpDeviceUids = exports.createKnownUidFor = exports.deleteBackupFlagsForUids = exports.createBackupFlagFor = exports.isBackupFlagPresentFor = exports.isBackupExistsFor = exports.getLogFileFor = exports.getBackupFolderFor = exports.getKnownUidPathFor = exports.getBackupFlagPathFor = exports.getPidFileNameFor = void 0;
 const fs = __importStar(require("node:fs"));
 const config_1 = require("../config");
+const global_1 = require("../global");
 function getPidFileNameFor(cmdName) {
     return `${config_1.PIDS_FOLDER}/${cmdName}.pid`;
 }
 exports.getPidFileNameFor = getPidFileNameFor;
 function getBackupFlagPathFor(uid) {
-    return `${config_1.BACKUP_FLAG_PATH}/${uid}`;
+    return `${config_1.BACKUP_FLAG_FOLDER}/${uid}`;
 }
 exports.getBackupFlagPathFor = getBackupFlagPathFor;
+function getKnownUidPathFor(uid) {
+    return `${config_1.KNOWN_UIDS_FOLDER}/${uid}`;
+}
+exports.getKnownUidPathFor = getKnownUidPathFor;
 function getBackupFolderFor(uid) {
     return `${config_1.BACKUP_FOLDER}/${uid}`;
 }
@@ -70,9 +75,22 @@ function deleteBackupFlagsForUids(uids) {
         const uid = uids[i];
         const backupFlag = getBackupFlagPathFor(uid);
         if (fs.existsSync(backupFlag)) {
-            console.log(`backup flag found for ${uid}, removing...`);
+            console.log(`backup flag found for ${global_1.uidToNameDictionary[uid]}, removing...`);
             fs.unlinkSync(backupFlag);
         }
     }
 }
 exports.deleteBackupFlagsForUids = deleteBackupFlagsForUids;
+function createKnownUidFor(uid, name) {
+    const path = getKnownUidPathFor(uid);
+    console.log(`updating known name for ${uid} to ${name}`);
+    if (!fs.existsSync(path)) {
+        fs.closeSync(fs.openSync(path, 'w'));
+        fs.writeFileSync(path, name);
+    }
+}
+exports.createKnownUidFor = createKnownUidFor;
+function getBackupedUpDeviceUids() {
+    return fs.readdirSync(config_1.BACKUP_FLAG_FOLDER);
+}
+exports.getBackupedUpDeviceUids = getBackupedUpDeviceUids;

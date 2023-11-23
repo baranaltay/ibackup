@@ -17,6 +17,7 @@ function getAllPairedUids() {
         if (code == 0) {
             return stdout.split('\n').map(x => x.trim()).filter(x => x !== '');
         }
+        console.warn('get paired uids failed with exit code: ', code, stderr);
         return [];
     });
 }

@@ -10,10 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDeviceNameFor = void 0;
+const global_1 = require("../global");
 const spwn_1 = require("../utils/spwn");
+const uidProcesser_1 = require("../utils/uidProcesser");
 function getDeviceNameFor(uid) {
     return __awaiter(this, void 0, void 0, function* () {
         let result = yield (0, spwn_1.spwn)('ideviceinfo', ['-n', '-k', 'DeviceName', '-u', uid.toString()]);
+        if (result.code !== 0) {
+            console.error('error getting device name for uid:', uid, 'error: ', result.stderr);
+        }
+        if (!(uid in global_1.uidToNameDictionary) || global_1.uidToNameDictionary[uid] == uid) {
+            (0, uidProcesser_1.createKnownUidFor)(uid, result.stdout);
+        }
         return result.stdout;
     });
 }

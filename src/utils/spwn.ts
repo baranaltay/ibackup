@@ -18,11 +18,10 @@ export async function spwn(name: string, args: string[], logToFile: boolean = fa
         }
         const cmd = spawn(name, args, { env: environment });
         child_processes[cmdName] = cmd;
-        console.log('spawning ', name, args, 'with pid: ', cmd.pid);
+        // console.log('spawning ', name);
 
         let pidFileName = getPidFileNameFor(cmdName);
         fs.writeFileSync(pidFileName, cmd.pid?.toString() || 'no-pid');
-        // console.log('creating pid file ', pidFileName);
 
         const result: SpawnResult = {
             stdout: '',
@@ -49,8 +48,7 @@ export async function spwn(name: string, args: string[], logToFile: boolean = fa
         }
 
         cmd.on('exit', (code) => {
-            console.log(`${cmdName} exited with code: ${code}`);
-            // console.log('cleaning up pid files...');
+            // console.log(`${cmdName} exited with code: ${code}`);
             let pidFileName = getPidFileNameFor(cmdName);
             if (fs.existsSync(pidFileName)) {
                 fs.unlinkSync(pidFileName);
