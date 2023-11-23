@@ -154,7 +154,7 @@ function tryGetAllUids() {
                 console.log('device(s) found!: ', uids.map(x => global_1.uidToNameDictionary[x]));
                 return uids;
             }
-            console.log(`No device is present. Sleeping for ${config_1.SLEEP_SECONDS}... (try count is ${tryCounter})`);
+            console.log(`No device is present. Sleeping for ${config_1.SLEEP_SECONDS}... (try ${tryCounter}/${config_1.TRY_GET_DEVICE_COUNT})`);
             yield (0, sleep_1.sleep)(config_1.SLEEP_SECONDS);
         }
         return [];
@@ -201,7 +201,9 @@ function getUids() {
         return connectedUids;
     });
 }
-setInterval(printStatus, 10000);
+setInterval(() => {
+    printStatus();
+}, 20000);
 (function main() {
     return __awaiter(this, void 0, void 0, function* () {
         ensureDirectories();
@@ -211,7 +213,7 @@ setInterval(printStatus, 10000);
             removeFromArrayIfBackupPresent(toBeBackedUpUids);
             if (toBeBackedUpUids.length > 0) {
                 let backupLoopTryCounter = 0;
-                backupLoop: while (toBeBackedUpUids.length > 0 || ++backupLoopTryCounter < 10) {
+                backupLoop: while (toBeBackedUpUids.length > 0 && ++backupLoopTryCounter < 10) {
                     let uids = yield getUids();
                     let returnLoop = uids;
                     if (returnLoop == types_1.ReturnLoop.break) {
