@@ -2,11 +2,10 @@
 version: '3.8'
 services:
   ibackup:
-    image: baltay/iphone-backup:1.0
+    image: baltay/ibackup:1.0
     container_name: ibackup
-    # privileged: true
     network_mode: 'host'
-    # entrypoint: 'tail -f /dev/null'
+    entrypoint: 'tail -f /dev/null'
     environment:
       - PUID=0
       - PGID=0
@@ -14,14 +13,20 @@ services:
     volumes:
       - /selfhosted/ibackup/data/:/ibackup/
       - /selfhosted/ibackup/lockdown/:/var/lib/lockdown/
-      # - /var/run:/var/run
-      - /dev/bus/usb:/dev/bus/usb
       - /home/baltay/projects/iphone-backup/ibackup/:/ibackup-node/
     # restart: unless-stopped
     deploy:
       resources:
         limits:
           memory: 2048M
+  ibackup-wifi-sync:
+    image: baltay/ibackup-wifi-sync:1.0
+    container_name: ibackup-wifi-sync
+    privileged: true
+    entrypoint: 'tail -f /dev/null'
+    volumes:
+      - /selfhosted/ibackup/lockdown/:/var/lib/lockdown/
+      - /dev/bus/usb:/dev/bus/usb
 
 networks:
   default:

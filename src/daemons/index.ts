@@ -13,7 +13,7 @@ const USBMUXD_CMD_NAME = 'usbmuxd';
 const USBMUXD_CMD_ARGS = ['-z', '-f'];
 
 async function activateNetmuxd(): Promise<void> {
-    spwn(NETMUXD_CMD_NAME, NETMUXD_CMD_ARGS, true, true);
+    spwn(NETMUXD_CMD_NAME, [] /*NETMUXD_CMD_ARGS*/, true, true);
     await sleep(1);
 }
 
@@ -47,7 +47,7 @@ function deactivate(cmdName: string) {
 
 export async function activateMuxdDaemons(): Promise<void> {
     console.log('activating muxd daemons');
-    await activateUsbmuxd();
+    // await activateUsbmuxd();
     await activateNetmuxd();
 }
 

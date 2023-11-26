@@ -134,12 +134,12 @@ function startBackupForUids(uids: string[]) {
 
 function printStatus(): void {
     let backedupUids = getBackupedUpDeviceUids();
-    let status = `Remaining devices: ${globalThis.toBeBackedUpUids.map(x => uidToNameDictionary[x])}\nConnected devices: ${globalThis.connectedUids.map(x => uidToNameDictionary[x])}\nBackedup devices: ${backedupUids.map(x => uidToNameDictionary[x])}\nIn Progress devices: ${globalThis.inProgressUids.map(x => uidToNameDictionary[x])}`;
+    let status = `Remaining devices: ${globalThis.toBeBackedUpUids.map(x => uidToNameDictionary[x] ?? x)}\nConnected devices: ${globalThis.connectedUids.map(x => uidToNameDictionary[x] ?? x)}\nBackedup devices: ${backedupUids.map(x => uidToNameDictionary[x] ?? x)}\nIn Progress devices: ${globalThis.inProgressUids.map(x => uidToNameDictionary[x] ?? x)}`;
     console.log(status);
 }
 
+let tryCounter = 0;
 async function tryGetAllUids(): Promise<string[]> {
-    let tryCounter = 0;
     while (!globalThis.killFlag && tryCounter++ < TRY_GET_DEVICE_COUNT) {
         let uids = await getAllUids();
         if (uids.length > 0) {

@@ -13,9 +13,9 @@ export async function spwn(name: string, args: string[], logToFile: boolean = fa
 
     return new Promise(async (resolve, reject) => {
         const environment = process.env;
-        if (!isUsbmuxd) {
-            environment.USBMUXD_SOCKET_ADDRESS = '127.0.0.1:27015';
-        }
+        // if (!isUsbmuxd) {
+        //     environment.USBMUXD_SOCKET_ADDRESS = '127.0.0.1:27015';
+        // }
         const cmd = spawn(name, args, { env: environment });
         child_processes[cmdName] = cmd;
         // console.log('spawning ', name);
