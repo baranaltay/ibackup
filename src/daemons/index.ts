@@ -6,7 +6,7 @@ import { getPidFileNameFor } from '../utils/uidProcesser';
 import { existsSync, readFileSync } from 'node:fs';
 import { kill } from 'node:process';
 
-const NETMUXD_CMD_NAME = 'aarch64-linux-netmuxd';
+const NETMUXD_CMD_NAME = 'netmuxd';
 const NETMUXD_CMD_ARGS = ['--disable-unix', '--host', '127.0.0.1'];
 
 const USBMUXD_CMD_NAME = 'usbmuxd';
