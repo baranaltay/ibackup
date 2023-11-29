@@ -2,7 +2,7 @@ import { sleep } from '../utils/sleep';
 import { child_processes, killAll } from '../utils/process';
 import { spwn } from '../utils/spwn';
 import { generateCommandName } from '../utils/generateCommandName';
-import { getPidFileNameFor } from '../utils/uidProcesser';
+import { getPidFileNameFor } from '../utils/uidProcessor';
 import { existsSync, readFileSync } from 'node:fs';
 import { kill } from 'node:process';
 

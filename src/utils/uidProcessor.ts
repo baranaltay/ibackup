@@ -6,6 +6,7 @@ import {
     LOGS_FOLDER,
     KNOWN_UIDS_FOLDER
 } from "../config";
+import { getNameForUid } from './getNameFromUid';
 
 export function getPidFileNameFor(cmdName: string): string {
     return `${PIDS_FOLDER}/${cmdName}.pid`;
@@ -56,7 +57,7 @@ export function deleteBackupFlagsForUids(uids: string[]) {
         const uid = uids[i];
         const backupFlag = getBackupFlagPathFor(uid);
         if (fs.existsSync(backupFlag)) {
-            console.log(`backup flag found for ${globalThis.uidToNameDictionary[uid]}, removing...`);
+            console.log(`backup flag found for ${getNameForUid(uid)}, removing...`);
             fs.unlinkSync(backupFlag);
         }
     }

@@ -6,7 +6,8 @@ export async function notify_and_log(...params: any[]) {
 
     fetch('https://ntfy.baltay.dev/ibackup', {
         method: "POST",
-        body: JSON.stringify(args),
+        body: args,
     });
+
     console.log(args);
 }

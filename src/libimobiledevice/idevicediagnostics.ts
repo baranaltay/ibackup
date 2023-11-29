@@ -1,4 +1,5 @@
 // import { uidToNameDictionary } from "../global";
+import { getNameForUid } from "../utils/getNameFromUid";
 import { sleep } from "../utils/sleep";
 import { spwn } from "../utils/spwn";
 
@@ -20,16 +21,15 @@ function getCurrentCapacity(arr: string[]): number {
 export async function getBatteryLevelFor(uid: string): Promise<number> {
     let result = await spwn('idevicediagnostics', ['-n', 'ioregentry', 'AppleSmartBattery', '-u', uid.toString()]);
     if (result.code !== 0) {
-        console.error('idevicediagnostics: ', result.stderr);
         return -1;
     }
 
     let arr = result.stdout.split('\n');
     let batteryLevel = getCurrentCapacity(arr);
     let IsCharging = getIsCharging(arr);
-    console.log(`${globalThis.uidToNameDictionary[uid]} is at ${batteryLevel}%. Device ${IsCharging ? 'is' : 'is not'} charging.`)
+    console.log(`${getNameForUid(uid)} is at ${batteryLevel}%. Device ${IsCharging ? 'is' : 'is not'} charging.`)
 
-    return getCurrentCapacity(arr);
+    return batteryLevel;
 }
 
 export async function tryGetBatteryLevel(uid: string): Promise<number> {
@@ -37,7 +37,7 @@ export async function tryGetBatteryLevel(uid: string): Promise<number> {
     let tryCounter = 0;
     let result = -1;
     while (++tryCounter < MAX_TRY_COUNT && (result = await getBatteryLevelFor(uid)) === -1) {
-        console.warn(`could not read battery level for ${globalThis.uidToNameDictionary[uid]}... will try again (try count: ${tryCounter}/${MAX_TRY_COUNT})`);
+        console.warn(`could not read battery level for ${getNameForUid(uid)}... will try again (try count: ${tryCounter}/${MAX_TRY_COUNT})`);
         await sleep(1);
     }
 

@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import { spawn } from "child_process";
 import { SpawnResult } from "../types";
 import { child_processes, killProcess } from "./process";
-import { getPidFileNameFor, getLogFileFor } from "./uidProcesser";
+import { getPidFileNameFor, getLogFileFor } from "./uidProcessor";
 import { generateCommandName } from './generateCommandName';
 
 export async function spwn(name: string, args: string[], logToFile: boolean = false, isUsbmuxd: boolean = false): Promise<SpawnResult> {
@@ -57,6 +57,10 @@ export async function spwn(name: string, args: string[], logToFile: boolean = fa
             result.code = code;
             if (logStream != null) {
                 logStream.end();
+            }
+
+            if (code !== 0 && result.stderr != '') {
+                console.warn(`${name} error: ${result.stderr}`);
             }
 
             resolve(result);

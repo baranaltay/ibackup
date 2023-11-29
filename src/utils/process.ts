@@ -3,7 +3,7 @@ import { execSync } from "child_process";
 import path from "path";
 import { PIDS_FOLDER } from "../config";
 import { child_process } from "../types";
-import { getPidFileNameFor } from "./uidProcesser";
+import { getPidFileNameFor } from "./uidProcessor";
 
 export const child_processes: child_process = {};
 

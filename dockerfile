@@ -80,4 +80,5 @@ RUN export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib"
 COPY --from=builder /ibackup-node /ibackup-node
 COPY --from=builder /usr/bin/netmuxd /usr/bin/netmuxd
 
+WORKDIR /ibackup-node
 CMD "node" "build/index.js"
