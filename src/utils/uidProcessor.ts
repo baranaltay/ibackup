@@ -18,7 +18,12 @@ export function getLogFileFor(cmdName: string): string {
 }
 
 export function getFileNameFromCmd(name: string, args: string[]): string {
-    return `${name}_${args.map(x => x.replaceAll('\\', '#')).join('_')}`;
+    let today = new Date();
+    let day = today.getDate();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let datePrefix = `${year}-${month}-${day}`;
+    return `${datePrefix}_${name}_${args.map(x => x.replaceAll('\\', '#')).join('_')}`;
 }
 
 export function isBackupFlagPresentFor(uid: string): boolean {

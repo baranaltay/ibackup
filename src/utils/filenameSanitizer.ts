@@ -33,7 +33,7 @@ const reservedRe = /^\.+$/;
 const windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
 const windowsTrailingRe = /[\. ]+$/;
 
-export function sanitizeFileName(input: string, replacement: string): string {
+function sanitize(input: string, replacement: string): string {
     if (typeof input !== 'string') {
         throw new Error('Input must be string');
     }
@@ -46,11 +46,11 @@ export function sanitizeFileName(input: string, replacement: string): string {
         .replace(windowsTrailingRe, replacement);
 }
 
-module.exports = function (input: string, replacement: string = '') {
-    let output = sanitizeFileName(input, replacement);
+export function sanitizeFileName(input: string, replacement: string = '') {
+    let output = sanitize(input, replacement);
     if (replacement === '') {
         return output;
     }
 
-    return sanitizeFileName(output, '');
+    return sanitize(output, '');
 };

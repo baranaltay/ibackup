@@ -78,12 +78,17 @@ export class Device implements IDevice {
         }
 
         this.isInProgress = true;
-        let { stdout, stderr, code } = await startBackupForAsync(this.uid);
+        let { code, stderr } = await startBackupForAsync(this.uid);
         let endBatteryLevel = await tryGetBatteryLevelAsync(this);
         this.batteryDifference = (endBatteryLevel?.level || 0) - (this.battery?.level || 0);
-        if (code == 0) {
+        if (code === 0) {
             createBackupFlagFor(this.uid);
             this.isBackedUp = true;
+        }
+
+        // cancelled by the user
+        if (code === 48) {
+            stderr += 'Cancelled by the user';
         }
 
         this.isInProgress = false;

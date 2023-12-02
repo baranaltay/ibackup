@@ -76,7 +76,6 @@ async function dynamicSleep() {
     while (!killFlag) {
         ensureDirectories();
         startTimeout();
-        shouldWait = true;
         netmuxdDaemon.activate();
 
         let remainingUids = await getAllPairedUids();
@@ -98,6 +97,7 @@ async function dynamicSleep() {
                 shouldWait = false;
             }
         });
+
         netmuxdDaemon.on('disconnect', function (uid: string) {
             let device = deviceDictionary[uid];
 
@@ -111,6 +111,7 @@ async function dynamicSleep() {
         });
 
         await dynamicSleep();
+        shouldWait = true;
         sendReportNotification(deviceDictionary);
         stopTimeout();
         netmuxdDaemon.deactivate();
