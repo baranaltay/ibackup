@@ -5,109 +5,51 @@
         <key>IORegistry</key>
         <dict>
                 <key>AbsoluteCapacity</key>
-                <integer>2835</integer>
+                <integer>1940</integer>
                 <key>AdapterDetails</key>
                 <dict>
                         <key>AdapterID</key>
-                        <integer>28687</integer>
+                        <integer>0</integer>
                         <key>AdapterVoltage</key>
                         <integer>5000</integer>
                         <key>Current</key>
-                        <integer>3000</integer>
-                        <key>Description</key>
-                        <string>pd charger</string>
-                        <key>FamilyCode</key>
-                        <integer>-536854518</integer>
-                        <key>FwVersion</key>
-                        <string>01050068</string>
-                        <key>HwVersion</key>
-                        <string>1.0</string>
+                        <integer>0</integer>
                         <key>IsWireless</key>
                         <false/>
-                        <key>Manufacturer</key>
-                        <string>Apple Inc.</string>
-                        <key>Model</key>
-                        <string>0x700F</string>
-                        <key>Name</key>
-                        <string>20W USB-C Power Adapter</string>
                         <key>PMUConfiguration</key>
-                        <integer>3000</integer>
-                        <key>SerialString</key>
-                        <string>C4H21660F5ZPK84AR</string>
+                        <integer>0</integer>
                         <key>SharedSource</key>
                         <integer>0</integer>
                         <key>Source</key>
                         <integer>0</integer>
-                        <key>UsbHvcHvcIndex</key>
-                        <integer>0</integer>
-                        <key>UsbHvcMenu</key>
-                        <array>
-                                <dict>
-                                        <key>Index</key>
-                                        <integer>0</integer>
-                                        <key>MaxCurrent</key>
-                                        <integer>3000</integer>
-                                        <key>MaxVoltage</key>
-                                        <integer>5000</integer>
-                                </dict>
-                        </array>
                         <key>Watts</key>
-                        <integer>15</integer>
+                        <integer>0</integer>
                 </dict>
                 <key>AdapterInfo</key>
                 <integer>0</integer>
                 <key>Amperage</key>
-                <integer>82</integer>
+                <integer>-15</integer>
                 <key>AppleChargeRateLimitIndex</key>
                 <integer>0</integer>
                 <key>AppleRawAdapterDetails</key>
                 <array>
                         <dict>
                                 <key>AdapterID</key>
-                                <integer>28687</integer>
+                                <integer>0</integer>
                                 <key>AdapterVoltage</key>
                                 <integer>5000</integer>
                                 <key>Current</key>
-                                <integer>3000</integer>
-                                <key>Description</key>
-                                <string>pd charger</string>
-                                <key>FamilyCode</key>
-                                <integer>-536854518</integer>
-                                <key>FwVersion</key>
-                                <string>01050068</string>
-                                <key>HwVersion</key>
-                                <string>1.0</string>
+                                <integer>0</integer>
                                 <key>IsWireless</key>
                                 <false/>
-                                <key>Manufacturer</key>
-                                <string>Apple Inc.</string>
-                                <key>Model</key>
-                                <string>0x700F</string>
-                                <key>Name</key>
-                                <string>20W USB-C Power Adapter</string>
                                 <key>PMUConfiguration</key>
-                                <integer>3000</integer>
-                                <key>SerialString</key>
-                                <string>C4H21660F5ZPK84AR</string>
+                                <integer>0</integer>
                                 <key>SharedSource</key>
                                 <integer>0</integer>
                                 <key>Source</key>
                                 <integer>0</integer>
-                                <key>UsbHvcHvcIndex</key>
-                                <integer>0</integer>
-                                <key>UsbHvcMenu</key>
-                                <array>
-                                        <dict>
-                                                <key>Index</key>
-                                                <integer>0</integer>
-                                                <key>MaxCurrent</key>
-                                                <integer>3000</integer>
-                                                <key>MaxVoltage</key>
-                                                <integer>5000</integer>
-                                        </dict>
-                                </array>
                                 <key>Watts</key>
-                                <integer>15</integer>
+                                <integer>0</integer>
                         </dict>
                         <dict>
                                 <key>AdapterID</key>
@@ -123,7 +65,7 @@
                                 <key>IsWireless</key>
                                 <false/>
                                 <key>PMUConfiguration</key>
-                                <integer>3000</integer>
+                                <integer>0</integer>
                                 <key>SharedSource</key>
                                 <integer>0</integer>
                                 <key>Source</key>
@@ -133,17 +75,17 @@
                         </dict>
                 </array>
                 <key>AppleRawBatteryVoltage</key>
-                <integer>4388</integer>
+                <integer>3919</integer>
                 <key>AppleRawCurrentCapacity</key>
-                <integer>2810</integer>
+                <integer>1913</integer>
                 <key>AppleRawExternalConnected</key>
-                <true/>
+                <false/>
                 <key>AppleRawMaxCapacity</key>
-                <integer>2987</integer>
+                <integer>3260</integer>
                 <key>AtCriticalLevel</key>
                 <false/>
                 <key>AvgTimeToEmpty</key>
-                <integer>1660</integer>
+                <integer>1696</integer>
                 <key>BatteryCellDisconnectCount</key>
                 <integer>0</integer>
                 <key>BatteryData</key>
@@ -151,7 +93,7 @@
                         <key>AlgoChemID</key>
                         <integer>1005802730</integer>
                         <key>AlgoTemperature</key>
-                        <integer>1697382</integer>
+                        <integer>1658060</integer>
                         <key>BatteryHealthMetric</key>
                         <integer>242</integer>
                         <key>CellCurrentAccumulator</key>
@@ -162,60 +104,60 @@
                         <integer>0</integer>
                         <key>CellVoltage</key>
                         <array>
-                                <integer>4388</integer>
+                                <integer>3919</integer>
                         </array>
                         <key>CellWom</key>
                         <array>
                                 <integer>3355440</integer>
                         </array>
                         <key>ChargeAccum</key>
-                        <integer>-5780</integer>
+                        <integer>-4727</integer>
                         <key>ChemID</key>
                         <integer>1005801232</integer>
                         <key>ChemicalWeightedRa</key>
-                        <integer>227</integer>
+                        <integer>225</integer>
                         <key>CycleCount</key>
-                        <integer>819</integer>
+                        <integer>825</integer>
                         <key>DOD0</key>
                         <array>
-                                <integer>11906</integer>
+                                <integer>7228</integer>
                         </array>
                         <key>DODatEOC</key>
                         <integer>0</integer>
                         <key>DailyMaxSoc</key>
-                        <integer>94</integer>
+                        <integer>82</integer>
                         <key>DailyMinSoc</key>
-                        <integer>25</integer>
+                        <integer>32</integer>
                         <key>DateOfFirstUse</key>
                         <integer>0</integer>
                         <key>DesignCapacity</key>
                         <integer>3092</integer>
                         <key>Dod0AtQualifiedQmax</key>
-                        <integer>53137</integer>
+                        <integer>296</integer>
                         <key>DynamicSoc1Vcut</key>
                         <integer>0</integer>
                         <key>FccComp1</key>
-                        <integer>2987</integer>
+                        <integer>3260</integer>
                         <key>FccComp2</key>
-                        <integer>2987</integer>
+                        <integer>3260</integer>
                         <key>FilteredCurrent</key>
-                        <integer>89</integer>
+                        <integer>-19</integer>
                         <key>Flags</key>
-                        <integer>8320</integer>
+                        <integer>8192</integer>
                         <key>GaugeFlagRaw</key>
-                        <integer>8320</integer>
+                        <integer>8192</integer>
                         <key>GaugeResetCounter</key>
                         <integer>0</integer>
                         <key>ISS</key>
-                        <integer>80</integer>
+                        <integer>-15</integer>
                         <key>ITMiscStatus</key>
-                        <integer>57376</integer>
+                        <integer>47106</integer>
                         <key>LifetimeData</key>
                         <dict>
                                 <key>AverageTemperature</key>
                                 <integer>26</integer>
                                 <key>CycleCountLastQmax</key>
-                                <integer>46</integer>
+                                <integer>57</integer>
                                 <key>FlashEraseCounter</key>
                                 <integer>0</integer>
                                 <key>FlashFailureCounter</key>
@@ -243,7 +185,7 @@
                                 <key>MaximumTemperature</key>
                                 <integer>605</integer>
                                 <key>MinimumFCC</key>
-                                <integer>2044</integer>
+                                <integer>1674</integer>
                                 <key>MinimumPackVoltage</key>
                                 <integer>3062</integer>
                                 <key>MinimumQmax</key>
@@ -261,15 +203,15 @@
                                 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
                                 </data>
                                 <key>TemperatureSamples</key>
-                                <integer>101027381</integer>
+                                <integer>101649369</integer>
                                 <key>TimeAtHighSoc</key>
                                 <data>
-                                +gMAAOAFAAATAAAAAAAAAA==
+                                CgQAAOUFAAATAAAAAAAAAA==
                                 </data>
                                 <key>TotalOperatingTime</key>
-                                <integer>28063</integer>
+                                <integer>28235</integer>
                                 <key>UpdateTime</key>
-                                <integer>1700762755</integer>
+                                <integer>1701384023</integer>
                         </dict>
                         <key>ManufactureDate</key>
                         <integer>61784013680697</integer>
@@ -282,63 +224,63 @@
                         <key>PMUConfigured</key>
                         <integer>2550</integer>
                         <key>PackCurrentAccumulator</key>
-                        <integer>2831751</integer>
+                        <integer>-969466</integer>
                         <key>PackCurrentAccumulatorCount</key>
-                        <integer>297763</integer>
+                        <integer>919037</integer>
                         <key>PassedCharge</key>
-                        <integer>-1904</integer>
+                        <integer>10</integer>
                         <key>PresentDOD</key>
                         <array>
-                                <integer>2748</integer>
+                                <integer>7275</integer>
                         </array>
                         <key>Qmax</key>
                         <array>
-                                <integer>3407</integer>
+                                <integer>3490</integer>
                         </array>
                         <key>QmaxDisqualificationReason</key>
                         <integer>1</integer>
                         <key>Qstart</key>
-                        <integer>180</integer>
+                        <integer>1347</integer>
                         <key>RSS</key>
-                        <integer>144</integer>
+                        <integer>258</integer>
                         <key>Ra00</key>
-                        <integer>274</integer>
+                        <integer>280</integer>
                         <key>Ra01</key>
-                        <integer>235</integer>
+                        <integer>244</integer>
                         <key>Ra02</key>
-                        <integer>102</integer>
+                        <integer>111</integer>
                         <key>Ra03</key>
-                        <integer>236</integer>
+                        <integer>275</integer>
                         <key>Ra04</key>
-                        <integer>228</integer>
+                        <integer>260</integer>
                         <key>Ra05</key>
-                        <integer>235</integer>
+                        <integer>206</integer>
                         <key>Ra06</key>
-                        <integer>276</integer>
+                        <integer>231</integer>
                         <key>Ra07</key>
-                        <integer>257</integer>
+                        <integer>221</integer>
                         <key>Ra08</key>
-                        <integer>268</integer>
+                        <integer>231</integer>
                         <key>Ra09</key>
-                        <integer>289</integer>
+                        <integer>250</integer>
                         <key>Ra10</key>
-                        <integer>339</integer>
+                        <integer>293</integer>
                         <key>Ra11</key>
-                        <integer>315</integer>
+                        <integer>272</integer>
                         <key>Ra12</key>
-                        <integer>398</integer>
+                        <integer>344</integer>
                         <key>Ra13</key>
-                        <integer>680</integer>
+                        <integer>587</integer>
                         <key>Ra14</key>
-                        <integer>1442</integer>
+                        <integer>1246</integer>
                         <key>RaTableRaw</key>
                         <array>
                                 <data>
-                                ARIA6wBmAOwA5ADrARQBAQEMASEBUwE7AY4CqAWiAAA=
+                                ARgA9ABvARMBBADOAOcA3QDnAPoBJQEQAVgCSwTeAAA=
                                 </data>
                         </array>
                         <key>ResScale</key>
-                        <integer>1000</integer>
+                        <integer>437</integer>
                         <key>ResetData</key>
                         <data>
                         AQAAAAAAAAACAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
@@ -356,24 +298,24 @@
                         <key>Serial</key>
                         <string>F8Y03740GE6M6YMBS</string>
                         <key>SimRate</key>
-                        <integer>277</integer>
+                        <integer>75</integer>
                         <key>Soc1Voltage</key>
                         <integer>3200</integer>
                         <key>StateOfCharge</key>
-                        <integer>94</integer>
+                        <integer>59</integer>
                         <key>TrueRemainingCapacity</key>
-                        <integer>2809</integer>
+                        <integer>1912</integer>
                         <key>UUID</key>
                         <integer>230613946</integer>
                         <key>Voltage</key>
-                        <integer>4387</integer>
+                        <integer>3919</integer>
                         <key>WatchdogDebugDump</key>
                         <data>
                         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
                         </data>
                         <key>WeightedRa</key>
                         <array>
-                                <integer>227</integer>
+                                <integer>225</integer>
                         </array>
                         <key>iMaxAndSocSmoothTable</key>
                         <data>
@@ -400,24 +342,24 @@
                         <integer>0</integer>
                 </dict>
                 <key>ChargerConfiguration</key>
-                <integer>2550</integer>
+                <integer>0</integer>
                 <key>ChargerData</key>
                 <dict>
                         <key>ChargerID</key>
                         <integer>353530914</integer>
                         <key>ChargerInhibitReason</key>
-                        <integer>0</integer>
+                        <integer>2</integer>
                         <key>ChargerStatus</key>
                         <data>
-                        EQAKQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB5AQAAAAAA
+                        AAAKQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArAAAAAAAA
                         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
                         </data>
                         <key>ChargingCurrent</key>
-                        <integer>152</integer>
-                        <key>ChargingVoltage</key>
-                        <integer>4388</integer>
-                        <key>NotChargingReason</key>
                         <integer>0</integer>
+                        <key>ChargingVoltage</key>
+                        <integer>4385</integer>
+                        <key>NotChargingReason</key>
+                        <integer>1152</integer>
                         <key>TimeChargingThermallyLimited</key>
                         <integer>0</integer>
                         <key>VacVoltageLimit</key>
@@ -426,9 +368,9 @@
                 <key>ChargingOverride</key>
                 <integer>0</integer>
                 <key>CurrentCapacity</key>
-                <integer>95</integer>
+                <integer>62</integer>
                 <key>CycleCount</key>
-                <integer>819</integer>
+                <integer>825</integer>
                 <key>DeadBatteryBootData</key>
                 <dict>
                         <key>AdapterType</key>
@@ -455,11 +397,11 @@
                 <key>DesignCapacity</key>
                 <integer>3092</integer>
                 <key>ExternalChargeCapable</key>
-                <true/>
+                <false/>
                 <key>ExternalConnected</key>
-                <true/>
+                <false/>
                 <key>FullPathUpdated</key>
-                <integer>1700762435</integer>
+                <integer>1701384023</integer>
                 <key>FullyCharged</key>
                 <false/>
                 <key>GasGaugeFirmwareVersion</key>
@@ -654,9 +596,9 @@
                         <integer>0</integer>
                 </dict>
                 <key>InstantAmperage</key>
-                <integer>79</integer>
+                <integer>-23</integer>
                 <key>IsCharging</key>
-                <true/>
+                <false/>
                 <key>KioskMode</key>
                 <dict>
                         <key>KioskModeFullChargeVoltage</key>
@@ -666,7 +608,7 @@
                         <key>KioskModeHighSocSeconds</key>
                         <integer>0</integer>
                         <key>KioskModeLastHighSocHours</key>
-                        <integer>0</integer>
+                        <integer>1</integer>
                         <key>KioskModeMode</key>
                         <integer>1</integer>
                 </dict>
@@ -684,7 +626,7 @@
                 <key>MaxCapacity</key>
                 <integer>100</integer>
                 <key>NominalChargeCapacity</key>
-                <integer>3054</integer>
+                <integer>3137</integer>
                 <key>PostChargeWaitSeconds</key>
                 <integer>120</integer>
                 <key>PostDischargeWaitSeconds</key>
@@ -692,56 +634,56 @@
                 <key>PowerTelemetryData</key>
                 <dict>
                         <key>AccumulatedAdapterEfficiencyLoss</key>
-                        <integer>12285359</integer>
+                        <integer>25802302855</integer>
                         <key>AccumulatedBatteryPower</key>
                         <integer>0</integer>
                         <key>AccumulatedSystemEnergyConsumed</key>
-                        <integer>42632811</integer>
+                        <integer>120826299</integer>
                         <key>AccumulatedSystemLoad</key>
-                        <integer>132281645</integer>
+                        <integer>407956367</integer>
                         <key>AccumulatedSystemPowerIn</key>
-                        <integer>153544970</integer>
+                        <integer>435143586</integer>
                         <key>AccumulatedWallEnergyEstimate</key>
-                        <integer>54918170</integer>
+                        <integer>153325378</integer>
                         <key>AdapterEfficiencyLoss</key>
-                        <integer>80</integer>
+                        <integer>0</integer>
                         <key>AdapterEfficiencyLossAccumulatorCount</key>
-                        <integer>39249</integer>
+                        <integer>100599</integer>
                         <key>BatteryPower</key>
-                        <integer>359</integer>
+                        <integer>-58</integer>
                         <key>PowerTelemetryErrorCount</key>
                         <integer>0</integer>
                         <key>SystemCurrentIn</key>
-                        <integer>126</integer>
+                        <integer>0</integer>
                         <key>SystemEnergyConsumed</key>
-                        <integer>178</integer>
+                        <integer>0</integer>
                         <key>SystemLoad</key>
-                        <integer>285</integer>
+                        <integer>58</integer>
                         <key>SystemLoadAccumulatorCount</key>
-                        <integer>297762</integer>
+                        <integer>919036</integer>
                         <key>SystemPowerIn</key>
-                        <integer>644</integer>
+                        <integer>0</integer>
                         <key>SystemPowerInAccumulatorCount</key>
-                        <integer>39237</integer>
+                        <integer>100576</integer>
                         <key>SystemVoltageIn</key>
-                        <integer>5119</integer>
+                        <integer>0</integer>
                         <key>WallEnergyEstimate</key>
-                        <integer>258</integer>
+                        <integer>0</integer>
                 </dict>
                 <key>Serial</key>
                 <string>F8Y03740GE6M6YMBS</string>
                 <key>Temperature</key>
-                <integer>2600</integer>
+                <integer>2539</integer>
                 <key>TimeRemaining</key>
-                <integer>165</integer>
+                <integer>1696</integer>
                 <key>UpdateTime</key>
-                <integer>1700762755</integer>
+                <integer>1701384023</integer>
                 <key>UserVisiblePathUpdated</key>
-                <integer>1700762755</integer>
+                <integer>1701383485</integer>
                 <key>VirtualTemperature</key>
-                <integer>2579</integer>
+                <integer>2529</integer>
                 <key>Voltage</key>
-                <integer>4388</integer>
+                <integer>3919</integer>
                 <key>built-in</key>
                 <true/>
         </dict>

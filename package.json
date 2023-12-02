@@ -4,7 +4,7 @@
   "description": "A dockerized iPhone backup utility written in node js that uses libimobiledevice and netmuxd to backup your phone over your local network.",
   "main": "index.js",
   "scripts": {
-    "start:dev": "npx nodemon",
+    "dev": "nodemon src/index.ts",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js"
   },

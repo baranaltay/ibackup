@@ -1,4 +1,4 @@
-export function PromiseAllDynamic(promises: Promise<any>[]): Promise<any> {
+export function promiseAllDynamicAsync(promises: Promise<any>[]): Promise<any> {
     return new Promise(resolve => {
         const wait = () => {
             const length = promises.length

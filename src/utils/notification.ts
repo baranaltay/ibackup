@@ -1,4 +1,4 @@
-export async function notify_and_log(...params: any[]) {
+export function notify_and_log(...params: any[]) {
     let args = Object.values(params).join(',');
     if (args.startsWith(',')) {
         args = args.substring(1);

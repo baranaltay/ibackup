@@ -1,3 +1,5 @@
+// import { globals } from "../global";
+
 export function sleep(seconds: number): Promise<void> { return new Promise(r => setTimeout(r, seconds * 1000)); }
 
 export async function sleepUntilTomorrowMidnight(): Promise<void> {
@@ -14,3 +16,8 @@ export async function sleepUntilTomorrowMidnight(): Promise<void> {
     await sleep(untilMidnight);
 }
 
+export async function dynamicSleep(flag: boolean) {
+    while (flag) {
+        await sleep(1);
+    }
+}

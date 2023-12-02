@@ -1,17 +1,15 @@
-// export const uidToNameDictionary: { [key: string]: string } = {};
 
-export const globals: {
-    toBeBackedUp: string[],
-    connected: string[],
-    inProgress: string[],
-    backedUp: string[],
-    shouldWait: boolean
-} = {
-    toBeBackedUp: [],
-    connected: [],
-    inProgress: [],
-    backedUp: [],
-    shouldWait: true
-};
+// class Globals {
 
-export const backupPromises: Promise<void>[] = [];
+//     public shouldWait: boolean = true;
+
+//     constructor() {
+//         this.reset();
+//     }
+
+//     reset() {
+//         this.shouldWait = true;
+//     }
+// }
+
+// export const globals = new Globals();

@@ -1,7 +1,9 @@
 // import { uidToNameDictionary } from "../global";
-import { getNameForUid } from "../utils/getNameFromUid";
+import { execFileSync, execSync } from "child_process";
+import { IBattery, IDevice } from "../types";
+import { execAsync } from "../utils/execAsync";
 import { sleep } from "../utils/sleep";
-import { spwn } from "../utils/spwn";
+
 
 function getIsCharging(arr: string[]): boolean {
     let index = arr.findIndex(x => x.includes('IsCharging'));
@@ -17,29 +19,47 @@ function getCurrentCapacity(arr: string[]): number {
     return parseInt(capacityStr);
 }
 
+function parseStdout(stdout: string): IBattery {
+    let arr = stdout.split('\n');
+    let level = getCurrentCapacity(arr);
+    let isCharging = getIsCharging(arr);
 
-export async function getBatteryLevelFor(uid: string): Promise<number> {
-    let result = await spwn('idevicediagnostics', ['-n', 'ioregentry', 'AppleSmartBattery', '-u', uid.toString()]);
-    if (result.code !== 0) {
-        return -1;
-    }
-
-    let arr = result.stdout.split('\n');
-    let batteryLevel = getCurrentCapacity(arr);
-    let IsCharging = getIsCharging(arr);
-    console.log(`${getNameForUid(uid)} is at ${batteryLevel}%. Device ${IsCharging ? 'is' : 'is not'} charging.`)
-
-    return batteryLevel;
+    return { level, isCharging };
 }
 
-export async function tryGetBatteryLevel(uid: string): Promise<number> {
+export async function getBatteryLevelForAsync(uid: string): Promise<IBattery | null> {
+    let result = await execAsync('idevicediagnostics', ['-n', 'ioregentry', 'AppleSmartBattery', '-u', uid.toString()]);
+    
+    if (result.code !== 0) {
+        return null;
+    }
+
+    return parseStdout(result.stdout);
+}
+
+export async function tryGetBatteryLevelAsync(device: IDevice): Promise<IBattery | null> {
     const MAX_TRY_COUNT = 10;
     let tryCounter = 0;
-    let result = -1;
-    while (++tryCounter < MAX_TRY_COUNT && (result = await getBatteryLevelFor(uid)) === -1) {
-        console.warn(`could not read battery level for ${getNameForUid(uid)}... will try again (try count: ${tryCounter}/${MAX_TRY_COUNT})`);
+    let result: IBattery | null = null;
+    while (++tryCounter < MAX_TRY_COUNT && (result = (await getBatteryLevelForAsync(device.uid))) == null) {
+        console.warn(`could not read battery level for ${device.name}... will try again (try count: ${tryCounter}/${MAX_TRY_COUNT})`);
         await sleep(1);
     }
 
     return result;
+}
+
+export function getBatteryLevelFor(uid: string): IBattery | null {
+    try {
+        let result = execSync('idevicediagnostics ' + ['-n', 'ioregentry', 'AppleSmartBattery', '-u', uid].join(' ')).toString();
+        return parseStdout(result);
+
+    } catch (error: any) {
+        let stdout = error.stdout.toString();
+        if (stdout != '')
+            console.error(stdout);
+        console.error(error.message);
+    }
+
+    return null;
 }

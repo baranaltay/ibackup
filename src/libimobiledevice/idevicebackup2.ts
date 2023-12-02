@@ -1,19 +1,30 @@
 import * as fs from 'node:fs';
+import { spawn } from "node:child_process";
 import { BACKUP_FOLDER } from "../config";
-import { spwn } from "../utils/spwn";
-import { getBackupFolderFor, isBackupExistsFor } from "../utils/uidProcessor";
-import { SpawnResult } from '../types';
-import { getNameForUid } from '../utils/getNameFromUid';
-// import { uidToNameDictionary } from '../global';
+import { sanitizeFileName } from "../utils/filenameSanitizer";
+import { getFileNameFromCmd, getLogFileFor } from "../utils/uidProcessor";
 
-export async function startBackupFor(uid: string): Promise<SpawnResult> {
-    const ideviceBackup2Args = ['-u', uid.toString(), '-n', 'backup', '--full', BACKUP_FOLDER];
+const CMD = 'idevicebackup2';
+function getCmdArgs(uid: string): string[] {
+    return ['-u', uid.toString(), '-n', 'backup', '--full', BACKUP_FOLDER];
+}
 
-    if (!isBackupExistsFor(uid)) {
-        console.log(`no previous backup for ${getNameForUid(uid)}. Proceeding with full backup`);
-        let backupFolder = getBackupFolderFor(uid);
-        fs.mkdirSync(backupFolder, { recursive: true });
-    }
+export async function startBackupForAsync(uid: string): Promise<number|null> {
+    let args = getCmdArgs(uid);
+    let fileName = getFileNameFromCmd(CMD, args);
+    fileName = sanitizeFileName(fileName, '_');
+    let logFile = getLogFileFor(fileName);
+    let logStream = fs.createWriteStream(logFile, { flags: 'a' });
 
-    return await spwn('idevicebackup2', ideviceBackup2Args, true);
+    return new Promise(function (resolve, reject) {
+
+        let cmd = spawn(CMD, args);
+        cmd.stdout.pipe(logStream);
+        cmd.stderr.pipe(logStream);
+        
+        cmd.on('exit', function (code) {
+            logStream.end();
+            resolve(code);
+        });
+    });
 }

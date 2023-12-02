@@ -10,13 +10,15 @@ export interface SpawnResult {
     code: number | null
 }
 
-export interface GetUidsResult {
-    uids: string[],
-    returnLoop: ReturnLoop
+export interface IDevice {
+    name: string,
+    uid: string,
+    battery: IBattery | null,
+    isBackedUp: boolean,
+    isInProgress: boolean
 }
 
-export enum ReturnLoop {
-    continue,
-    break,
-    none
+export interface IBattery {
+    level: number,
+    isCharging: boolean
 }
