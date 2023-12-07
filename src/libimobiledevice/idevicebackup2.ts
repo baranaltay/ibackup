@@ -18,16 +18,18 @@ export async function startBackupForAsync(uid: string): Promise<BackupResult> {
     let args = getCmdArgs(uid);
     let fileName = getFileNameFromCmd(CMD, args);
     fileName = sanitizeFileName(fileName, '_');
-    let logFile = getLogFileFor(fileName);
 
+    let logFile = getLogFileFor(fileName);
     let logStream = fs.createWriteStream(logFile, { flags: 'a' });
 
     return new Promise(function (resolve, reject) {
         let stderr = '';
+        let rejectTimeout: NodeJS.Timeout;
 
         let cmd = spawn(CMD, args);
         cmd.stdout.pipe(logStream);
         cmd.stderr.on('data', function (chunk) {
+            clearTimeout(rejectTimeout);
             let log = chunk.toString();
             stderr += log + '\n';
             logStream.write(log);
@@ -35,7 +37,7 @@ export async function startBackupForAsync(uid: string): Promise<BackupResult> {
 
         cmd.on('exit', function (code) {
             logStream.end();
-            resolve({code: code || -1, stderr});
+            resolve({ code: code || -1, stderr });
         });
     });
 }

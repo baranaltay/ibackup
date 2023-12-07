@@ -1,4 +1,3 @@
-// import { uidToNameDictionary } from "../global";
 import { execFileSync, execSync } from "child_process";
 import { IBattery, IDevice } from "../types";
 import { execAsync } from "../utils/execAsync";
@@ -24,12 +23,17 @@ function parseStdout(stdout: string): IBattery {
     let level = getCurrentCapacity(arr);
     let isCharging = getIsCharging(arr);
 
+    if (level === -1) {
+        console.log('could not read the battery level from this stdout:')
+        console.log(stdout);
+    }
+
     return { level, isCharging };
 }
 
 export async function getBatteryLevelForAsync(uid: string): Promise<IBattery | null> {
     let result = await execAsync('idevicediagnostics', ['-n', 'ioregentry', 'AppleSmartBattery', '-u', uid.toString()]);
-    
+
     if (result.code !== 0) {
         return null;
     }

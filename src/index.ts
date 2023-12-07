@@ -1,7 +1,7 @@
 
 import { sleep, sleepUntilTomorrowMidnight } from './utils/sleep';
 import { notify_and_log } from './utils/notification';
-import { NetmuxdDaemon } from './daemons';
+import { Daemon } from './daemons';
 import { ensureDirectories } from './operations/ensureDirectories';
 import { getAllPairedUids } from './libimobiledevice/idevicepair';
 import { distinct, removeItemFromArray } from './utils/arrayUtils';
@@ -31,24 +31,20 @@ interface DeviceDictionary {
 }
 
 function sendReportNotification(dictionary: DeviceDictionary) {
-    let backedUpNames: string[] = [];
-    let notBackedUpNames: string[] = [];
+    let report: string[] = [];
 
     for (let key in dictionary) {
         const device = dictionary[key];
         if (device.isBackedUp) {
-            backedUpNames.push(`${device.name} (${device.batteryDifference})`);
-        }
-
-        if (!device.isBackedUp) {
-            notBackedUpNames.push(device.name);
+            report.push(`success: ${device.name} (${device.batteryDifference})`);
+        } else if (device.alreadyBackedUp) {
+            report.push(`${device.name} (already backed up today)`);
+        } else {
+            report.push(`failed: ${device.name} reason: ${device.reason}`);
         }
     }
 
-    let report = `success: ${backedUpNames}
-failed: ${notBackedUpNames}`;
-
-    notify_and_log(report);
+    notify_and_log(report.join('\n'));
 }
 
 let backupTimeout: NodeJS.Timeout;
@@ -70,7 +66,7 @@ async function dynamicSleep() {
 }
 
 (async function main() {
-    let netmuxdDaemon = new NetmuxdDaemon();
+    let netmuxdDaemon = new Daemon();
     let deviceDictionary: DeviceDictionary = {};
 
     while (!killFlag) {
@@ -80,7 +76,7 @@ async function dynamicSleep() {
 
         let remainingUids = await getAllPairedUids();
         console.log(`paired device(s): ${remainingUids.map(x => tryGetDeviceNameFor(x))}`);
-
+        console.log('waiting for connections...');
         netmuxdDaemon.on('connect', async function (uid: string) {
             let device: Device;
             if (!(uid in deviceDictionary)) {

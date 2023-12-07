@@ -1,44 +1,34 @@
 import EventEmitter from 'node:events';
-import { spawn, ChildProcessWithoutNullStreams } from 'node:child_process';
+import { NetmuxdDaemon } from './NetmuxdDaemon';
 
-export class NetmuxdDaemon extends EventEmitter {
+export interface IDaemon {
+    activate(): void;
+    deactivate(): void;
+    isActivated: boolean;
+    on(eventName: string | symbol, listener: (...args: any[]) => void): this;
+}
 
-    private NETMUXD_CMD_NAME = 'netmuxd';
-    private NETMUXD_CMD_ARGS = ['--disable-unix', '--host', '127.0.0.1'];
+export class Daemon extends EventEmitter implements IDaemon {
 
-    private _cmd: ChildProcessWithoutNullStreams | null = null;
-    private _isActivated = false;
+    private readonly _netmuxd: IDaemon;
+
+    public get isActivated(): boolean {
+        return this._netmuxd.isActivated;
+    }
 
     constructor() {
         super();
+        this._netmuxd = new NetmuxdDaemon();
     }
 
     public async activate() {
-        if (this._isActivated) {
-            return;
-        }
-
-        console.log('activating netmuxd');
-        this._cmd = spawn(this.NETMUXD_CMD_NAME);
-        this._cmd.stdout.on('data', (data) => {
-            let stdout: string = data.toString();
-            
-            if (stdout.toLowerCase().startsWith('adding')) {
-                let uid = stdout.split(' ')[2];
-                this.emit('connect', uid.trim());
-            } else if (stdout.toLocaleLowerCase().startsWith('removing')) {
-                let uid = stdout.split(' ')[1];
-                this.emit('disconnect', uid.trim());
-            }
-        });
-        this._isActivated = true;
+        this._netmuxd.on('connect', (e) => this.emit('connect', e));
+        this._netmuxd.on('disconnect', (e) => this.emit('disconnect', e));
+        this._netmuxd.activate();
     }
 
     public deactivate() {
-        console.log('deactivating netmuxd');
         this.removeAllListeners();
-        this._cmd?.kill();
-        this._cmd = null;
-        this._isActivated = false;
+        this._netmuxd.deactivate();
     }
 }

@@ -8,8 +8,10 @@ import * as fs from 'node:fs';
 export class Device implements IDevice {
     public uid: string = '';
     public isBackedUp: boolean = false;
+    public alreadyBackedUp: boolean = false;
     public isInProgress: boolean = false;
     public batteryDifference: number = -1;
+    public reason: string = '';
 
     private _name: string = '';
     public get name() {
@@ -49,6 +51,8 @@ export class Device implements IDevice {
     }
 
     public reset() {
+        this.reason = '';
+        this.alreadyBackedUp = false;
         this.isBackedUp = false;
         this.isInProgress = false;
         this._battery = { isCharging: false, level: -1 };
@@ -56,43 +60,48 @@ export class Device implements IDevice {
 
     async startBackupAsync(): Promise<void> {
 
-        if (this.isInProgress || this.isBackedUp) {
+        if (this.isInProgress) {
             return;
         }
 
-        if (isBackupFlagPresentFor(this.uid)) {
-            this.isBackedUp = true;
+        if (this.alreadyBackedUp || isBackupFlagPresentFor(this.uid)) {
+            this.alreadyBackedUp = true;
             this.log(`already backed up`);
+            this.reason = 'already backed up';
             return;
         }
 
         let battery = this.battery;
-        if (battery === null) {
+        if (battery == null) {
             this.log(`skipping because could not read battery level`);
+            this.reason = 'could not read battery level';
             return;
         }
 
         if (battery.level < 50) {
-            this.log(`skipping because battery is lower than 50% (${this.battery?.level}%)`);
+            this.log(`skipping because battery is lower than 50% (${battery.level}%)`);
+            this.reason = `battery is lower than 50% (${battery.level}%)`;
             return;
         }
 
         this.isInProgress = true;
+        this.log('requesting backup');
         let { code, stderr } = await startBackupForAsync(this.uid);
         let endBatteryLevel = await tryGetBatteryLevelAsync(this);
-        this.batteryDifference = (endBatteryLevel?.level || 0) - (this.battery?.level || 0);
+        this.batteryDifference = (endBatteryLevel?.level || 0) - (battery.level || 0);
         if (code === 0) {
             createBackupFlagFor(this.uid);
             this.isBackedUp = true;
         }
 
-        // cancelled by the user
+        // cancelled by user
         if (code === 48) {
-            stderr += 'Cancelled by the user';
+            stderr += 'cancelled by user';
+            this.reason = 'cancelled by user';
         }
 
         this.isInProgress = false;
-        this.log(`backup ${code == 0 ? 'success' : 'failed'} for ${this.name}! (Battery level: ${this.battery?.level}% -> ${endBatteryLevel?.level}%) ${stderr}`);
+        this.log(`backup ${code == 0 ? 'success' : 'failed'} for ${this.name}! (Battery level: ${battery.level}% -> ${endBatteryLevel?.level}%) ${stderr}`);
     }
 
     private log(str: any) {
