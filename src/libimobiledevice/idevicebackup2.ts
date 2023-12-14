@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { BACKUP_FOLDER } from "../config";
 import { sanitizeFileName } from "../utils/filenameSanitizer";
 import { getFileNameFromCmd, getLogFileFor } from "../utils/uidProcessor";
+import { env } from '../global';
 
 const CMD = 'idevicebackup2';
 function getCmdArgs(uid: string): string[] {
@@ -26,7 +27,7 @@ export async function startBackupForAsync(uid: string): Promise<BackupResult> {
         let stderr = '';
         let rejectTimeout: NodeJS.Timeout;
 
-        let cmd = spawn(CMD, args);
+        let cmd = spawn(CMD, args, { env: env });
         cmd.stdout.pipe(logStream);
         cmd.stderr.on('data', function (chunk) {
             clearTimeout(rejectTimeout);

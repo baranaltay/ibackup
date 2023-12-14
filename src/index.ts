@@ -9,6 +9,7 @@ import { Device } from './models/device';
 import { tryGetDeviceNameFor } from './utils/getNameForUids';
 import { promiseAllDynamicAsync } from './utils/promiseAllDynamic';
 import { PROCESS_TIMEOUT_SECONDS } from './config';
+import { execAsync } from './utils/execAsync';
 
 let killFlag = false;
 let shouldWait = true;

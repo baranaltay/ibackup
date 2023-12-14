@@ -1,5 +1,6 @@
 import EventEmitter from 'node:events';
 import { NetmuxdDaemon } from './NetmuxdDaemon';
+import { Usbmuxd2Daemon } from './Usbmuxd2Daemon';
 
 export interface IDaemon {
     activate(): void;
@@ -10,25 +11,25 @@ export interface IDaemon {
 
 export class Daemon extends EventEmitter implements IDaemon {
 
-    private readonly _netmuxd: IDaemon;
+    private readonly _muxd: IDaemon;
 
     public get isActivated(): boolean {
-        return this._netmuxd.isActivated;
+        return this._muxd.isActivated;
     }
 
     constructor() {
         super();
-        this._netmuxd = new NetmuxdDaemon();
+        this._muxd = new NetmuxdDaemon();
     }
 
     public async activate() {
-        this._netmuxd.on('connect', (e) => this.emit('connect', e));
-        this._netmuxd.on('disconnect', (e) => this.emit('disconnect', e));
-        this._netmuxd.activate();
+        this._muxd.on('connect', (e) => this.emit('connect', e));
+        this._muxd.on('disconnect', (e) => this.emit('disconnect', e));
+        this._muxd.activate();
     }
 
     public deactivate() {
         this.removeAllListeners();
-        this._netmuxd.deactivate();
+        this._muxd.deactivate();
     }
 }

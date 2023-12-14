@@ -51,16 +51,6 @@ cd /usr/src/usbmuxd && \
 # git checkout 1.1.1 && \
 ./autogen.sh --prefix=/usr/local && make && make install
 
-RUN git clone https://github.com/tihmstar/libgeneral.git /usr/src/libgeneral && \
-cd /usr/src/libgeneral && \
-git checkout 72 && \
-./autogen.sh --prefix=/usr/local && make && make install
-
-RUN git clone https://github.com/tihmstar/usbmuxd2.git /usr/src/usbmuxd2 && \
-cd /usr/src/usbmuxd2 && \
-git checkout v3.0 && \
-./autogen.sh --prefix=/usr/local && make && make install
-
 # RUN git clone https://github.com/libimobiledevice/libirecovery.git /usr/src/libirecovery && \
 # cd /usr/src/libirecovery && \
 # ./autogen.sh --prefix=/usr/local && make && make install
@@ -77,12 +67,20 @@ WORKDIR /ibackup-node
 COPY . .
 RUN npm ci
 
-# RUN wget -q https://github.com/jkcoxson/netmuxd/releases/download/v0.1.4/aarch64-linux-netmuxd
-# RUN chmod a+rwx aarch64-linux-netmuxd
-# RUN mv aarch64-linux-netmuxd netmuxd
-# RUN mv netmuxd /usr/bin
+RUN wget -q https://github.com/jkcoxson/netmuxd/releases/download/v0.1.4/aarch64-linux-netmuxd
+RUN chmod a+rwx aarch64-linux-netmuxd
+RUN mv aarch64-linux-netmuxd netmuxd
+RUN mv netmuxd /usr/bin
 
 FROM node:21-alpine3.17 as runner
+
+RUN apk update && apk add --no-cache \
+bash \
+libusb \
+libzip \
+libusb-dev \
+libzip-dev \
+tmux
 
 COPY --from=builder /usr/local /usr/local
 RUN export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib"

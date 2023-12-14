@@ -1,0 +1,126 @@
+FROM node:21-bullseye as builder
+
+RUN apt update
+RUN apt install -y git 
+RUN apt install -y build-essential
+RUN apt install -y checkinstall
+RUN apt install -y git
+RUN apt install -y autoconf
+RUN apt install -y automake
+RUN apt install -y libtool-bin
+RUN apt install -y pkg-config 
+RUN apt install -y libudev-dev
+RUN apt install -y avahi-daemon
+RUN apt install -y tmux
+RUN apt install -y ca-certificates
+RUN apt install -y clang
+RUN apt install -y cmake
+RUN apt install -y automake
+RUN apt install -y checkinstall
+RUN apt install -y autoconf
+RUN apt install -y git
+RUN apt install -y libtool-bin
+RUN apt install -y libudev-dev
+RUN apt install -y libusb-dev
+RUN apt install -y libusb-1.0-0-dev
+RUN apt install -y libxml2-dev
+RUN apt install -y libevent-dev
+RUN apt install -y libssl-dev
+RUN apt install -y libdaemon-dev
+RUN apt install -y libglib2.0-dev
+RUN apt install -y libdbus-1-dev
+RUN apt install -y libexpat-dev
+RUN apt install -y libgdbm-dev
+RUN apt install -y doxygen
+RUN apt install -y cython3
+RUN apt install -y python3
+RUN apt install -y python3-dev
+RUN apt install -y python-is-python3
+RUN apt install -y expat
+RUN apt install -y dbus
+RUN apt install -y wget
+RUN apt install -y libnss-mdns
+
+RUN wget https://github.com/avahi/avahi/releases/download/v0.8/avahi-0.8.tar.gz -O avahi-0.8.tar.gz && \
+tar -xvf avahi-0.8.tar.gz && \
+rm -rf avahi-0.8.tar.gz && \
+cd avahi-0.8 && \
+./configure --prefix=/usr/local \
+    --disable-gtk --disable-gtk3 \
+    --disable-mono --disable-qt5 \
+    --disable-python \
+    --with-avahi-user=root \
+    --with-avahi-group=root && make -j$(nproc) && make install
+
+
+RUN git clone https://github.com/libusb/libusb /usr/src/libusb && \
+cd /usr/src/libusb && \
+git checkout v1.0.26 && \
+./autogen.sh --prefix=/usr/local && make && make install 
+
+RUN git clone https://github.com/libimobiledevice/libplist.git /usr/src/libplist && \
+cd /usr/src/libplist && \
+# git checkout 2.3.0 && \
+./autogen.sh --prefix=/usr/local && make && make install 
+
+RUN git clone https://github.com/libimobiledevice/libimobiledevice-glue.git /usr/src/libimobiledevice-glue && \
+cd /usr/src/libimobiledevice-glue && \
+# git checkout 1.0.0 && \
+./autogen.sh --prefix=/usr/local && make && make install
+
+RUN git clone https://github.com/libimobiledevice/libusbmuxd.git /usr/src/libusbmuxd && \
+cd /usr/src/libusbmuxd && \
+# git checkout 2.0.2 && \
+./autogen.sh --prefix=/usr/local && make && make install
+
+RUN git clone https://github.com/libimobiledevice/libimobiledevice.git /usr/src/libimobiledevice && \
+cd /usr/src/libimobiledevice && \
+git checkout 860ffb707af3af94467d2ece4ad258dda957c6cd && \
+./autogen.sh --prefix=/usr/local && make && make install
+
+RUN git clone https://github.com/libimobiledevice/usbmuxd.git /usr/src/usbmuxd && \
+cd /usr/src/usbmuxd && \
+# git checkout 1.1.1 && \
+./autogen.sh --prefix=/usr/local && make && make install
+
+RUN git clone https://github.com/tihmstar/libgeneral.git /usr/src/libgeneral && \
+cd /usr/src/libgeneral && \
+# git checkout 72 && \
+./autogen.sh --prefix=/usr/local && make && make install
+
+RUN git clone https://github.com/tihmstar/usbmuxd2.git /usr/src/usbmuxd2 && \
+cd /usr/src/usbmuxd2 && \
+# git checkout v3.0 && \
+./autogen.sh --prefix=/usr/local && make && make install
+
+# RUN git clone https://github.com/libimobiledevice/libirecovery.git /usr/src/libirecovery && \
+# cd /usr/src/libirecovery && \
+# ./autogen.sh --prefix=/usr/local && make && make install
+
+# RUN git clone https://github.com/libimobiledevice/idevicerestore.git /usr/src/idevicerestore && \
+# cd /usr/src/idevicerestore && \
+# ./autogen.sh --prefix=/usr/local && make && make install 
+
+# RUN git clone https://github.com/libimobiledevice/libideviceactivation.git /usr/src/libideviceactivation && \
+# cd /usr/src/libideviceactivation && \
+# ./autogen.sh --prefix=/usr/local && make && make install
+
+WORKDIR /ibackup-node
+COPY . .
+RUN npm ci
+
+# RUN wget -q https://github.com/jkcoxson/netmuxd/releases/download/v0.1.4/aarch64-linux-netmuxd
+# RUN chmod a+rwx aarch64-linux-netmuxd
+# RUN mv aarch64-linux-netmuxd netmuxd
+# RUN mv netmuxd /usr/bin
+
+FROM node:21-alpine3.17 as runner
+
+RUN export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib"
+
+COPY --from=builder /usr/local /usr/local
+COPY --from=builder /ibackup-node /ibackup-node
+COPY --from=builder /usr/bin/netmuxd /usr/bin/netmuxd
+
+WORKDIR /ibackup-node
+CMD "node" "build/index.js"

@@ -2,6 +2,7 @@ import { execFileSync, execSync } from "child_process";
 import { IBattery, IDevice } from "../types";
 import { execAsync } from "../utils/execAsync";
 import { sleep } from "../utils/sleep";
+import { env } from "../global";
 
 
 function getIsCharging(arr: string[]): boolean {
@@ -55,7 +56,7 @@ export async function tryGetBatteryLevelAsync(device: IDevice): Promise<IBattery
 
 export function getBatteryLevelFor(uid: string): IBattery | null {
     try {
-        let result = execSync('idevicediagnostics ' + ['-n', 'ioregentry', 'AppleSmartBattery', '-u', uid].join(' ')).toString();
+        let result = execSync('idevicediagnostics ' + ['-n', 'ioregentry', 'AppleSmartBattery', '-u', uid].join(' '), { env: env }).toString();
         return parseStdout(result);
 
     } catch (error: any) {

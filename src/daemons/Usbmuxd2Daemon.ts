@@ -1,12 +1,10 @@
 import EventEmitter from 'node:events';
-import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
+import { spawn, ChildProcessWithoutNullStreams } from 'node:child_process';
 import { IDaemon } from '.';
 
-class Usbmuxd2Daemon extends EventEmitter implements IDaemon {
-
+export class Usbmuxd2Daemon extends EventEmitter implements IDaemon {
     private readonly USBMUXD_CMD_NAME = 'usbmuxd';
     private readonly USBMUXD_CMD_ARGS = ['-z', '-f'];
-    private readonly USBMUXD2_CMD_ARGS = ['-z' /*, '-v'*/];
     private _cmd: ChildProcessWithoutNullStreams | null = null;
 
     isActivated: boolean = false;
@@ -15,14 +13,13 @@ class Usbmuxd2Daemon extends EventEmitter implements IDaemon {
         super();
     }
 
-
     activate(): void {
         if (this.isActivated) {
             return;
         }
 
         console.log('activating netmuxd');
-        this._cmd = spawn(this.USBMUXD_CMD_NAME);
+        this._cmd = spawn(this.USBMUXD_CMD_NAME, this.USBMUXD_CMD_ARGS);
         this._cmd.stdout.on('data', (data) => {
             let stdout: string = data.toString();
 
